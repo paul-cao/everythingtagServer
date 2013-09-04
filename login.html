@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/themes/jquery.mobile.flatui.css" />
+  <script src="/themes/jquery.min.js"></script>
+  <script src="/themes/jquery.mobile-1.3.1.min.js"></script>
+</head>
+<body>
+  <div data-role="page">
+
+    <div data-role="panel" id="panel" data-position="right" data-theme="a" data-display="push"></div>
+
+    <div data-role="header">
+      <a data-iconpos="notext" data-role="button" data-icon="home" title="Home">Home</a>
+      <h1>Sign Up</h1>
+      <a data-iconpos="notext" href="#panel" data-role="button" data-icon="flat-menu"></a>
+    </div>
+
+    <div data-role="content" role="main">
+      
+      <form action="/register/signin"  method="POST">
+        <input type="text" placeholder="username" name="username" />
+        <input type="password" placeholder="Password" name="pass"/>
+        
+        <button data-icon="flat-new" data-theme="f">Submit</button>
+      </form>
+      
+       <label style="color: red">{{errormsg}}</label> 
+      
+      
+      
+    </div>
+  </div>
+
+  <div id="highlight"> </div>
+</body>
+</html>

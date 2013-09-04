@@ -1,0 +1,10 @@
+read:
+
+http://gglasspuppy.appspot.com//read/?devtype=bluetohot&macinfo=1235&username=ab&pass=ab
+
+sign up:
+http://gglasspuppy.appspot.com/register/index
+
+scanner: (Post)
+
+https://gglasspuppy.appspot.com/scanner/?devtype=bluetohot&macinfo=1235&username=abc&pass=a
