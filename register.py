@@ -7,6 +7,7 @@ import webapp2
 
 import urllib
 
+import everyThingModel
 from google.appengine.ext import ndb
 from everyThingModel import EvUsers
 
@@ -41,8 +42,8 @@ class RegisterPage(webapp2.RequestHandler):
 class ProcessSigninPage(webapp2.RequestHandler):
 
     def post(self):
-        userinfo = self.request.get("username")   
-        passwd = self.request.get("pass")  
+        userinfo = self.request.get(everyThingModel.USERNAME)   
+        passwd = self.request.get(everyThingModel.PASSWORD)  
         
         curUser = EvUsers.query(ndb.AND(EvUsers.username==userinfo,EvUsers.password==passwd)).get()
         
@@ -59,46 +60,39 @@ class ProcessSigninPage(webapp2.RequestHandler):
 class MainPage(webapp2.RequestHandler):
 
     def post(self):
-        userinfo = self.request.get("username")   
-        passwd = self.request.get("pass")
-        repassword = self.request.get("repass")
+        userinfo = self.request.get(everyThingModel.USERNAME)   
+        passwd = self.request.get(everyThingModel.PASSWORD)
+        repassword = self.request.get(everyThingModel.CONFIRMPASS)
+                
         template = JINJA_ENVIRONMENT.get_template('register.html')
         print "email :  " + userinfo
         print "password :" + str(len(passwd))
         print "repassword :" + str(cmp(str(passwd),str(repassword)))
-        if (0 != cmp(str(passwd),str(repassword))):
-          #self.response.status = 200
-          self.response.status_message = "Password and confirm password are not consistent"
-          
-          template_values = {'errormsg': 'Password and confirm password are not consistent'}
-          self.response.write(template.render(template_values))
-          print "error1"
-        else :  
-          #q = db.Query(EvUsers).filter('username =', userinfo)
-          print "check user :" +   userinfo
-          user_old = EvUsers.query(EvUsers.username == userinfo).get()
-          #user_old = Users.get_or_insert(userinfo) 
-          if user_old:
-        		template_values = {'errormsg': 'user is already exists'}
-        		self.response.write(template.render(template_values))  
-        		print "error2"        		      			
-          else : 	
-            #user = Users(key_name=userinfo,username=userinfo,password=passwd)
-            #user.put() 
-            user_old = EvUsers(username=userinfo,password=passwd)
-            #user_old.username =  userinfo
-            #user_old.password = passwd
-            #user_old.temp = 100
-            user_old.put()
-            #self.response.headers['Content-Type'] = 'text/plain'
-            #q = db.Query(Users).filter('username =', userinfo)
-            user_old1 = EvUsers.query(EvUsers.username == userinfo).get()
-            #user_old1.password
-            #self.response.write("Hello, register module!, User : " + username + " Pass : " + password)
-            template = JINJA_ENVIRONMENT.get_template('suc.html')
-            template_values = {'greetings': 'greetings'}
-            self.response.write(template.render(template_values))
-          
+        
+        newUser = EvUsers()
+        retCode = newUser.isUsernameValid(userinfo)
+        if (everyThingModel.USERS_SUCCESS != retCode):
+        	#username error
+        	template_values = {'errormsg': everyThingModel.USERS_ERRINFO[retCode]}
+        	self.response.write(template.render(template_values))
+        	return self.response
+        	
+        retCode = newUser.isPasswordValid(passwd,repassword)
+        if (everyThingModel.USERS_SUCCESS != retCode):
+        	#password error
+        	template_values = {'errormsg': everyThingModel.USERS_ERRINFO[retCode]}
+        	self.response.write(template.render(template_values))
+        	return self.response
+        	
+        #user information correct, create new user
+        newUser.username = userinfo
+        newUser.password = passwd
+        newUser.createOrModifyUser() 
+        template = JINJA_ENVIRONMENT.get_template('suc.html')
+        template_values = {'greetings': 'greetings'}
+        self.response.write(template.render(template_values))
+               	
+        
 
 
 application = webapp2.WSGIApplication([

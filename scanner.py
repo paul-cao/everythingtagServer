@@ -25,7 +25,7 @@ class MainPage(webapp2.RequestHandler):
         curUser = EvUsers.query(ndb.AND(EvUsers.username==userinfo,EvUsers.password==passwd)).get()
         if (curUser):
         	print "user right"
-        	curDev = EvScannerDev.query(ndb.AND(EvScannerDev.devType==macInfo,EvScannerDev.macInfo==macInfo)).get()
+        	curDev = EvScannerDev.query(ndb.AND(EvScannerDev.devType==devType,EvScannerDev.macInfo==macInfo)).get()
         	if curDev:
         		#exists
         		print "dev exist"
