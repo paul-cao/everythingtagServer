@@ -22,8 +22,8 @@ class MainPage(webapp2.RequestHandler):
         print "devtype = " + devType
         print "macInfo = " + macInfo  
         
-        curUser = EvUsers.query(ndb.AND(EvUsers.username==userinfo,EvUsers.password==passwd)).get()
-        if (curUser):
+        curUser = EvUsers.isUserValid(userinfo,passwd)
+        if (True == curUser):
         	print "user right"
         	curDev = EvScannerDev.query(ndb.AND(EvScannerDev.devType==devType,EvScannerDev.macInfo==macInfo)).get()
         	if curDev:

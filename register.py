@@ -45,9 +45,9 @@ class ProcessSigninPage(webapp2.RequestHandler):
         userinfo = self.request.get(everyThingModel.USERNAME)   
         passwd = self.request.get(everyThingModel.PASSWORD)  
         
-        curUser = EvUsers.query(ndb.AND(EvUsers.username==userinfo,EvUsers.password==passwd)).get()
+        curUser = EvUsers.isUserValid(userinfo,passwd)
         
-        if (curUser):
+        if (True == curUser):
         	self.response.status = 200
         	return self.response
         else:
